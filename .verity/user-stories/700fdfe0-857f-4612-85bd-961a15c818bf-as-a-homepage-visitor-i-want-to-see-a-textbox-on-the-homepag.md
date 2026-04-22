@@ -1,9 +1,9 @@
 # As a homepage visitor, I want to see a textbox on the homepage
 
-<!-- verity-story-sync {"storyId":"700fdfe0-857f-4612-85bd-961a15c818bf","version":1,"origin":"verity"} -->
+<!-- verity-story-sync {"storyId":"700fdfe0-857f-4612-85bd-961a15c818bf","version":2,"origin":"verity"} -->
 
 - Story ID: `700fdfe0-857f-4612-85bd-961a15c818bf`
-- Status: `proposed`
+- Status: `active`
 - Priority: `medium`
 - Path: `.verity/user-stories/700fdfe0-857f-4612-85bd-961a15c818bf-as-a-homepage-visitor-i-want-to-see-a-textbox-on-the-homepag.md`
 
