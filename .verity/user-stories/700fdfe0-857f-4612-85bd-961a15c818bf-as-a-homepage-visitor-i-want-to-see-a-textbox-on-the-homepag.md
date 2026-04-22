@@ -1,6 +1,6 @@
 # As a homepage visitor, I want to see a textbox on the homepage
 
-<!-- verity-story-sync {"storyId":"700fdfe0-857f-4612-85bd-961a15c818bf","version":2,"origin":"verity"} -->
+<!-- verity-story-sync {"storyId":"700fdfe0-857f-4612-85bd-961a15c818bf","version":3,"origin":"verity"} -->
 
 - Story ID: `700fdfe0-857f-4612-85bd-961a15c818bf`
 - Status: `active`
