@@ -1,6 +1,6 @@
 # As a user, I want to enter text using a textbox
 
-<!-- verity-story-sync {"storyId":"cc264277-bac1-48f3-90e5-db5bbf8cec28","version":1,"origin":"verity"} -->
+<!-- verity-story-sync {"storyId":"cc264277-bac1-48f3-90e5-db5bbf8cec28","version":2,"origin":"verity"} -->
 
 - Story ID: `cc264277-bac1-48f3-90e5-db5bbf8cec28`
 - Status: `proposed`
