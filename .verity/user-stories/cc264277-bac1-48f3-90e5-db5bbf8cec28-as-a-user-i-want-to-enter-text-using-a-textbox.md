@@ -1,9 +1,9 @@
 # As a user, I want to enter text using a textbox
 
-<!-- verity-story-sync {"storyId":"cc264277-bac1-48f3-90e5-db5bbf8cec28","version":4,"origin":"verity"} -->
+<!-- verity-story-sync {"storyId":"cc264277-bac1-48f3-90e5-db5bbf8cec28","version":5,"origin":"verity"} -->
 
 - Story ID: `cc264277-bac1-48f3-90e5-db5bbf8cec28`
-- Status: `proposed`
+- Status: `active`
 - Priority: `high`
 - Path: `.verity/user-stories/cc264277-bac1-48f3-90e5-db5bbf8cec28-as-a-user-i-want-to-enter-text-using-a-textbox.md`
 
