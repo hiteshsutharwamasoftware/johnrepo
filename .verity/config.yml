@@ -1,7 +1,7 @@
 version: 1
 verity:
-  project_id: "1c45d0d8-ab38-4bf9-86af-6fb765915baf"
-  callback_url: "http://localhost:3001/api/callbacks/github-actions"
+  project_id: "811a7fad-65dc-4995-aa19-be715d4abfd2"
+  callback_url: "https://99c5-2409-40d4-1247-3176-ccd0-a379-43aa-e509.ngrok-free.app"
   bootstrap_version: "v1"
 
 commands:
