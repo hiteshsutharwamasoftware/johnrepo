@@ -1,0 +1,46 @@
+name: Verity Codex Test Generation
+
+on:
+  workflow_dispatch:
+    inputs:
+      scope:
+        description: "Optional scope for generated tests"
+        required: false
+        default: ""
+      callback_url:
+        description: "Verity callback URL (optional)"
+        required: false
+        default: ""
+      verity_project_id:
+        description: "Verity project id (optional)"
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: verity-test-generation-${{ github.repository }}-${{ github.ref_name }}
+  cancel-in-progress: false
+
+jobs:
+  test_generation:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Log dispatch inputs
+        run: |
+          echo "scope=${{ inputs.scope }}"
+          echo "callback_url=${{ inputs.callback_url }}"
+          echo "verity_project_id=${{ inputs.verity_project_id }}"
+
+      - name: Test generation placeholder
+        run: |
+          echo "codex-test-generation.yml is installed in dummy-frontend."
+          echo "Replace this placeholder with your full Codex test generation pipeline when ready."
+
