@@ -4,12 +4,28 @@ import viteLogo from './assets/vite.svg'
 import heroImg from './assets/hero.png'
 import './App.css'
 import { useWidgetUser } from './hooks/useWidget'
+import { useAuth } from './contexts/AuthContext'
 
 function App() {
   const [count, setCount] = useState(0)
-  const user = null
+  const { user } = useAuth()
 
-  useWidgetUser(user)
+  useWidgetUser(
+    user
+      ? {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          role: user.role,
+          tenant: user.tenant
+            ? {
+                id: user.tenant.id,
+                name: user.tenant.name
+              }
+            : undefined
+        }
+      : null
+  )
 
   return (
     <>

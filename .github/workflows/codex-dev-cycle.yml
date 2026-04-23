@@ -1,0 +1,57 @@
+name: Verity Codex Dev Cycle
+
+on:
+  workflow_dispatch:
+    inputs:
+      issue_number:
+        description: "Issue number (optional)"
+        required: false
+        default: ""
+      user_request:
+        description: "What to implement/fix (optional)"
+        required: false
+        default: ""
+      callback_url:
+        description: "Verity callback URL (optional)"
+        required: false
+        default: ""
+      verity_project_id:
+        description: "Verity project id (optional)"
+        required: false
+        default: ""
+      pr_title:
+        description: "PR title override (optional)"
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+concurrency:
+  group: verity-dev-cycle-${{ github.repository }}-${{ github.ref_name }}
+  cancel-in-progress: false
+
+jobs:
+  dev_cycle:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Log dispatch inputs
+        run: |
+          echo "issue_number=${{ inputs.issue_number }}"
+          echo "user_request=${{ inputs.user_request }}"
+          echo "callback_url=${{ inputs.callback_url }}"
+          echo "verity_project_id=${{ inputs.verity_project_id }}"
+          echo "pr_title=${{ inputs.pr_title }}"
+
+      - name: Dev cycle placeholder
+        run: |
+          echo "codex-dev-cycle.yml is installed in dummy-frontend."
+          echo "Replace this placeholder with your full Codex automation steps when ready."
+
