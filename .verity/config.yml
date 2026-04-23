@@ -1,0 +1,21 @@
+version: 1
+verity:
+  project_id: "208fa6ea-e357-4986-b174-2f42247ac67e"
+  callback_url: "http://localhost:3001/api/callbacks/github-actions"
+  bootstrap_version: "v1"
+
+commands:
+  setup: []
+  test: []
+  build: []
+  deploy: []
+
+policies:
+  pr_review:
+    enabled: true
+    label_required: "verity:agent"
+  openai_guardrail:
+    enabled: true
+  documentation:
+    auto_mode: true
+    handoff_file: "docs/AI_HANDOFF.md"
