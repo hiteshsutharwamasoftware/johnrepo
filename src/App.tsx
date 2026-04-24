@@ -8,6 +8,9 @@ import { useAuth } from './contexts/AuthContext'
 
 function App() {
   const [count, setCount] = useState(0)
+  // homepage textbox state
+  const [query, setQuery] = useState('')
+  const [lastSubmitted, setLastSubmitted] = useState<string | null>(null)
   const { user } = useAuth()
 
   useWidgetUser(
@@ -41,6 +44,41 @@ function App() {
             Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
           </p>
         </div>
+        {/* Accessible textbox prominently shown above the fold */}
+        <form
+          aria-label="Homepage input form"
+          className="homepage-input"
+          onSubmit={(e) => {
+            e.preventDefault()
+            const value = query.trim()
+            if (!value) return
+            // Minimal demo processing: store locally to show acceptance
+            setLastSubmitted(value)
+          }}
+        >
+          <label htmlFor="homepage-textbox" className="visually-hidden">
+            Enter text
+          </label>
+          <input
+            id="homepage-textbox"
+            name="homepage-textbox"
+            type="text"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Type here and press Enter"
+            aria-describedby={lastSubmitted ? 'submission-status' : undefined}
+            autoComplete="off"
+            className="textbox"
+          />
+          <button type="submit" className="submit-btn">
+            Submit
+          </button>
+        </form>
+        {lastSubmitted && (
+          <p id="submission-status" role="status" aria-live="polite">
+            Submitted: <code>{lastSubmitted}</code>
+          </p>
+        )}
         <button
           className="counter"
           onClick={() => setCount((count) => count + 1)}
