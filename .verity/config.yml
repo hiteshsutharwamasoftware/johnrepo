@@ -5,17 +5,19 @@ verity:
   bootstrap_version: "v1"
 
 commands:
-  setup: []
-  test: []
-  build: []
+  setup:
+  - npm ci
+  test:
+  - npm test
+  build:
+  - npm run build
   deploy: []
-
 policies:
   pr_review:
     enabled: true
-    label_required: "verity:agent"
+    label_required: verity:agent
   openai_guardrail:
     enabled: true
   documentation:
     auto_mode: true
-    handoff_file: "docs/AI_HANDOFF.md"
+    handoff_file: docs/AI_HANDOFF.md
