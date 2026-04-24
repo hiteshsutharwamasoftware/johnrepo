@@ -16,4 +16,4 @@ Steps:
 
 ## Scope
 
-As a homepage visitor, I want a textbox on the homepage - As a general user or visitor accessing the homepage, I want to see and use a textbox prominently displayed on the homepage. This allows users to input information (such as search queries, feedback, or other data as required by the application) immediately upon landing on the site. Providing a textbox on the homepage improves user engagement, streamlines user workflows, and supports key business objectives such as increasing user interacti
+As a homepage visitor, I want to ensure the homepage textbox functions correctly - As a visitor to the homepage, I want to interact with the textbox to enter information so that I can use the site's primary features without issues. Ensuring the textbox works as intended is critical for user engagement and data collection, directly impacting user satisfaction and conversion rates. This story focuses on validating the textbox's presence, input acceptance, and expected behavior on the homepage.

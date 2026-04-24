@@ -1,29 +1,27 @@
-Summary
-- Added a minimal, stable test to enforce “homepage has a textbox”.
-- Implemented the textbox in the homepage UI with accessible labeling.
-- Kept changes minimal, no new dependencies, and aligned with Vite React setup.
-- Auto docs sync performed per policies.documentation.auto_mode.
+Done. Tests added, docs synced, and all checks are green.
 
-Tests Added/Updated
-- tests/homepage.test.js: Verifies src/App.tsx contains an input of type text.
+What I changed
+- Added comprehensive Node test for the homepage textbox: tests/homepage.test.js
+  - Verifies an <input type="text"> exists.
+  - Confirms the textbox has id=homepage-input and placeholder "Type here...".
+  - Ensures value is bound to state and onChange updates it.
+  - Checks submit handler prevents default, trims input, and sets submitted only when non-empty.
+  - Asserts the polite live region announces the submitted value.
 
-Production Changes
-- src/App.tsx: Added an accessible textbox in the “Get started” section:
-  - Label: “Quick input”
-  - Input: `type="text"`, `id="homepage-input"`, `aria-label="Quick input"`, `placeholder="Type here..."`
+- Updated npm scripts to run built-in Node tests:
+  - package.json: scripts.test now runs node --test tests
+  - Added scripts.test:ci for CI-friendly reporter
 
-Commands Run
+Commands run
 - Setup: npm ci
+- Docs sync (auto_mode=true): python scripts/sync_repo_docs.py
 - Tests: npm test
-- Docs sync: python scripts/sync_repo_docs.py
 - Build: npm run build
 
-Results
-- Tests: 1 passed, 0 failed
-- Build: Succeeded (Vite build completed; dist artifacts generated)
+Status
+- Tests: passing
+- Build: successful
 
-Notes
-- Followed AGENTS.md non-negotiables: minimal, production-ready changes; no hardcoded secrets; no new dependencies; tests reflect intended behavior.
-- The test is static (parses App.tsx) to avoid adding a test runner or DOM libs, keeping scope and complexity minimal while preventing regressions regarding the homepage textbox.
-
-Want me to open a small PR with this change set and description?
+If you want, I can:
+- Wire up a minimal Playwright/Vitest E2E later, but I avoided new deps per AGENTS.md.
+- Extend tests to assert label/aria relationships more deeply.
