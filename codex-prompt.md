@@ -1,12 +1,19 @@
-# Verity Codex Use-Case Generation
+# Verity Codex Test Generation
 
-Update `docs/use-cases.md` with:
-- a short system summary
-- 5–20 primary user stories
-- acceptance criteria for each
-- (if obvious) key modules/files involved
+Generate/update tests to reflect intended behavior and prevent regressions.
 
-Follow `AGENTS.md`. Do not include secrets.
+Rules:
+- Follow `AGENTS.md`.
+- Prefer adding tests over changing production code.
+- Keep scope minimal.
 
-If `policies.documentation.auto_mode` is enabled, also refresh docs context using:
-- `python scripts/sync_repo_docs.py`
+Steps:
+1) Read `.verity/config.yml` to learn test/build commands.
+2) Add/update tests.
+3) If `policies.documentation.auto_mode` is enabled, run `python scripts/sync_repo_docs.py`.
+4) Run tests/build until green.
+5) Final message: Summary, tests added, commands run.
+
+## Scope
+
+As a homepage visitor, I want a textbox on the homepage - As a general user or visitor accessing the homepage, I want to see and use a textbox prominently displayed on the homepage. This allows users to input information (such as search queries, feedback, or other data as required by the application) immediately upon landing on the site. Providing a textbox on the homepage improves user engagement, streamlines user workflows, and supports key business objectives such as increasing user interacti

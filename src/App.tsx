@@ -43,6 +43,18 @@ function App() {
           <p>
             Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
           </p>
+          <div style={{ marginTop: '1rem' }}>
+            <label htmlFor="homepage-input" style={{ display: 'block', fontWeight: 600 }}>
+              Quick input
+            </label>
+            <input
+              id="homepage-input"
+              aria-label="Quick input"
+              type="text"
+              placeholder="Type here..."
+              style={{ padding: '0.5rem', width: '100%', maxWidth: 360 }}
+            />
+          </div>
         </div>
         {/* Accessible textbox prominently shown above the fold */}
         <form

@@ -48,6 +48,7 @@ _(none configured)_
 - `public`
 - `scripts`
 - `src`
+- `tests`
 
 ### Workflow Files
 - `codex-deploy.yml`

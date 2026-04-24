@@ -1,31 +1,29 @@
-Updated docs and ran required sync.
+Summary
+- Added a minimal, stable test to enforce “homepage has a textbox”.
+- Implemented the textbox in the homepage UI with accessible labeling.
+- Kept changes minimal, no new dependencies, and aligned with Vite React setup.
+- Auto docs sync performed per policies.documentation.auto_mode.
 
-What I changed
-- Edited docs/use-cases.md with:
-  - Short system summary
-  - 12 primary user stories
-  - Clear acceptance criteria for each
-  - Key modules/files where obvious
-- Ran python scripts/sync_repo_docs.py because policies.documentation.auto_mode is true in .verity/config.yml, which refreshed:
-  - docs/REPO_CONTEXT.md
-  - docs/AI_HANDOFF.md
+Tests Added/Updated
+- tests/homepage.test.js: Verifies src/App.tsx contains an input of type text.
 
-File references
-- docs/use-cases.md
-- .verity/config.yml
-- scripts/sync_repo_docs.py
-- docs/REPO_CONTEXT.md
-- docs/AI_HANDOFF.md
-- src/hooks/useWidget.ts
-- src/contexts/AuthContext.tsx
-- src/App.tsx
+Production Changes
+- src/App.tsx: Added an accessible textbox in the “Get started” section:
+  - Label: “Quick input”
+  - Input: `type="text"`, `id="homepage-input"`, `aria-label="Quick input"`, `placeholder="Type here..."`
 
-Checks run
-- Attempted npm test per AGENTS.md; repository has no test script in package.json, so npm test fails. Consider adding a minimal test or updating .verity/config.yml if tests are intentionally absent.
-- Build not executed because dependencies weren’t installed (npm ci requires network). In your environment, run:
-  - npm ci
-  - npm run build
+Commands Run
+- Setup: npm ci
+- Tests: npm test
+- Docs sync: python scripts/sync_repo_docs.py
+- Build: npm run build
+
+Results
+- Tests: 1 passed, 0 failed
+- Build: Succeeded (Vite build completed; dist artifacts generated)
 
 Notes
-- No secrets added; user identity is mocked in src/contexts/AuthContext.tsx.
-- Guardrails script scripts/check_no_direct_openai.py executes without error locally. If you enable CI, ensure it runs in workflows.
+- Followed AGENTS.md non-negotiables: minimal, production-ready changes; no hardcoded secrets; no new dependencies; tests reflect intended behavior.
+- The test is static (parses App.tsx) to avoid adding a test runner or DOM libs, keeping scope and complexity minimal while preventing regressions regarding the homepage textbox.
+
+Want me to open a small PR with this change set and description?
