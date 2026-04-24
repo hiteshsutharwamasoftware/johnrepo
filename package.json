@@ -6,10 +6,10 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "test": "echo \"No tests configured\"",
+    "test": "node --test tests",
     "lint": "eslint .",
     "preview": "vite preview",
-    "test": "echo \"No tests configured\" && exit 0"
+    "_test_placeholder": "echo \"replaced by verity\" && exit 0"
   },
   "dependencies": {
     "react": "^19.2.5",

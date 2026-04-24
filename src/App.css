@@ -212,10 +212,13 @@
 
 .visually-hidden {
   position: absolute !important;
-  height: 1px; width: 1px;
+  height: 1px;
+  width: 1px;
   overflow: hidden;
   clip: rect(1px, 1px, 1px, 1px);
   white-space: nowrap;
+}
+
 /* Homepage textbox styles */
 .homepage-input {
   display: flex;
