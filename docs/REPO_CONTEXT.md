@@ -11,16 +11,16 @@ This file helps Verity/Codex understand how to work in this repository.
 These are written into `.verity/config.yml` (in a PR) if empty.
 
 ### Setup
-- `npm ci`
+__SUGGESTED_SETUP__
 
 ### Tests
-- `npm test`
+__SUGGESTED_TEST__
 
 ### Build
-- `npm run build`
+__SUGGESTED_BUILD__
 
 ### Deploy
-_(none detected)_
+__SUGGESTED_DEPLOY__
 
 ## Notes for humans
 - If you change commands here, also update `.verity/config.yml`.
