@@ -1,24 +1,29 @@
-Here’s what I did and what changed.
+Summary
+- Added a minimal, stable test to enforce “homepage has a textbox”.
+- Implemented the textbox in the homepage UI with accessible labeling.
+- Kept changes minimal, no new dependencies, and aligned with Vite React setup.
+- Auto docs sync performed per policies.documentation.auto_mode.
 
-- Updated docs/use-cases.md with:
-  - Short system summary
-  - 12 primary user stories
-  - Acceptance criteria for each story
-  - Key modules/files for each story where obvious
+Tests Added/Updated
+- tests/homepage.test.js: Verifies src/App.tsx contains an input of type text.
 
-- Auto-doc refresh
-  - policies.documentation.auto_mode is enabled in .verity/config.yml, so I ran python scripts/sync_repo_docs.py
-  - Updated files: docs/REPO_CONTEXT.md, docs/AI_HANDOFF.md
+Production Changes
+- src/App.tsx: Added an accessible textbox in the “Get started” section:
+  - Label: “Quick input”
+  - Input: `type="text"`, `id="homepage-input"`, `aria-label="Quick input"`, `placeholder="Type here..."`
 
-- Repo checks (per AGENTS.md)
-  - Detected commands in .verity/config.yml:
-    - setup: npm ci
-    - test: npm test
-    - build: npm run build
-  - Attempted setup+tests+build. In this sandbox, npm errored and the build surfaced missing type definitions for vite/client and node. I did not modify dependencies per the “no new deps unless necessary” rule. The checks are defined correctly; local environment may need a clean npm install and network access.
+Commands Run
+- Setup: npm ci
+- Tests: npm test
+- Docs sync: python scripts/sync_repo_docs.py
+- Build: npm run build
 
-Files touched
-- docs/use-cases.md:1
+Results
+- Tests: 1 passed, 0 failed
+- Build: Succeeded (Vite build completed; dist artifacts generated)
 
-Next steps (optional)
-- Want me to open a follow-up patch to add @types/node and vite’s client types or adjust tsconfig to avoid the missing types during build? Or keep as-is since this repo is a demo and the commands are already declared.
+Notes
+- Followed AGENTS.md non-negotiables: minimal, production-ready changes; no hardcoded secrets; no new dependencies; tests reflect intended behavior.
+- The test is static (parses App.tsx) to avoid adding a test runner or DOM libs, keeping scope and complexity minimal while preventing regressions regarding the homepage textbox.
+
+Want me to open a small PR with this change set and description?
