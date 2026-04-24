@@ -5,7 +5,7 @@ This file helps Verity/Codex understand how to work in this repository.
 ## What Verity detected
 - Detected at: 2026-04-23 12:15:41 UTC
 - Repo: hiteshsutharwamasoftware/johnrepo
-- Default branch: main
+- Default branch: verity/bootstrap-v1-8bcd7a1174e6
 
 ## Suggested commands (review before enabling automation)
 These are written into `.verity/config.yml` (in a PR) if empty.
@@ -28,8 +28,8 @@ _(none detected)_
 
 ## Auto Documentation Snapshot
 <!-- verity:auto-doc:start -->
-- Commit: `69c50a263d092f4f99c6f0f0265b2c1a2965397c`
-- Commit date: `2026-04-24T11:55:31+05:30`
+- Commit: `bb4704a77cfefda444c88ecbd6bec9ad9283d46c`
+- Commit date: `2026-04-24T09:23:08Z`
 - Repository: `hiteshsutharwamasoftware/johnrepo`
 - Default branch: `main`
 
