@@ -6,9 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "test": "node --test tests/*.js",
-    "lint": "eslint .",
-    "preview": "vite preview"
+    "test": "node --test",
+    "lint": "eslint ."
   },
   "dependencies": {
     "react": "^19.2.5",
