@@ -1,29 +1,22 @@
 Summary
-- Added a minimal, stable test to enforce “homepage has a textbox”.
-- Implemented the textbox in the homepage UI with accessible labeling.
-- Kept changes minimal, no new dependencies, and aligned with Vite React setup.
-- Auto docs sync performed per policies.documentation.auto_mode.
+- Added focused Node tests to validate the homepage textbox’s presence, accessibility, controlled input behavior, submit handling, and user feedback. Updated the test script to use Node’s built-in test runner. Synced docs per auto_mode and verified a clean production build.
 
 Tests Added/Updated
-- tests/homepage.test.js: Verifies src/App.tsx contains an input of type text.
-
-Production Changes
-- src/App.tsx: Added an accessible textbox in the “Get started” section:
-  - Label: “Quick input”
-  - Input: `type="text"`, `id="homepage-input"`, `aria-label="Quick input"`, `placeholder="Type here..."`
+- tests/homepage.behavior.test.js:1
+  - Verifies input exists with type="text" and matches label/for and id.
+  - Ensures controlled input via value and onChange.
+  - Asserts form prevents default, trims input, and calls setSubmitted for non-empty values.
+  - Confirms presence of role="status" and aria-live="polite" feedback region.
+- tests/homepage.test.js:1 (existing retained)
+  - Keeps prior smoke check for presence of <input type="text">.
 
 Commands Run
 - Setup: npm ci
 - Tests: npm test
-- Docs sync: python scripts/sync_repo_docs.py
+- Docs sync (auto_mode=true): python scripts/sync_repo_docs.py
 - Build: npm run build
 
-Results
-- Tests: 1 passed, 0 failed
-- Build: Succeeded (Vite build completed; dist artifacts generated)
-
-Notes
-- Followed AGENTS.md non-negotiables: minimal, production-ready changes; no hardcoded secrets; no new dependencies; tests reflect intended behavior.
-- The test is static (parses App.tsx) to avoid adding a test runner or DOM libs, keeping scope and complexity minimal while preventing regressions regarding the homepage textbox.
-
-Want me to open a small PR with this change set and description?
+Result
+- Tests: 2 passed, 0 failed.
+- Build: Successful; artifacts emitted under dist/.
+- Scope kept minimal and aligned with AGENTS.md. No production code changes or new dependencies.
