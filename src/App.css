@@ -216,6 +216,9 @@
   overflow: hidden;
   clip: rect(1px, 1px, 1px, 1px);
   white-space: nowrap;
+  border: 0;
+}
+
 /* Homepage textbox styles */
 .homepage-input {
   display: flex;
