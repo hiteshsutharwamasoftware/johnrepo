@@ -182,3 +182,38 @@
     border-right-color: var(--border);
   }
 }
+
+
+/* Homepage textbox styles */
+.homepage-textbox {
+  display: flex;
+  gap: 8px;
+}
+
+.homepage-textbox input[type=text] {
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  min-width: 260px;
+}
+
+.homepage-textbox .submit {
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid var(--accent-border);
+  background: var(--accent-bg);
+  color: var(--accent);
+}
+
+.submitted {
+  margin: 0;
+  color: var(--text-h);
+}
+
+.visually-hidden {
+  position: absolute !important;
+  height: 1px; width: 1px;
+  overflow: hidden;
+  clip: rect(1px, 1px, 1px, 1px);
+  white-space: nowrap;
+}
