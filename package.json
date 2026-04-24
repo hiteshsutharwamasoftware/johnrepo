@@ -6,10 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "test": "echo \"No tests configured\"",
-    "lint": "eslint .",
-    "preview": "vite preview",
-    "test": "echo \"No tests configured\" && exit 0"
+    "test": "node --test",
+    "lint": "eslint ."
   },
   "dependencies": {
     "react": "^19.2.5",
