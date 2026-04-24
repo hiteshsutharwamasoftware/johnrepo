@@ -1,6 +1,6 @@
 # As a homepage visitor, I want to ensure the homepage textbox functions correctly
 
-<!-- verity-story-sync {"storyId":"f8e5ba3e-8d93-4ca2-9c0e-3f2d065f744d","version":3,"origin":"verity"} -->
+<!-- verity-story-sync {"storyId":"f8e5ba3e-8d93-4ca2-9c0e-3f2d065f744d","version":4,"origin":"verity"} -->
 
 - Story ID: `f8e5ba3e-8d93-4ca2-9c0e-3f2d065f744d`
 - Status: `active`
