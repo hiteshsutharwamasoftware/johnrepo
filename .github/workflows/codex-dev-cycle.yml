@@ -12,17 +12,29 @@ on:
         required: false
         default: ""
       callback_url:
-        description: "Verity callback URL (optional)"
+        description: "Verity callback URL override (optional)"
         required: false
         default: ""
       verity_project_id:
-        description: "Verity project id (optional)"
+        description: "Verity project id override (optional)"
         required: false
         default: ""
       pr_title:
         description: "PR title override (optional)"
         required: false
         default: ""
+      pr_labels:
+        description: "Comma-separated labels"
+        required: false
+        default: "verity:agent,verity:codex"
+      pr_draft:
+        description: "Create PR as draft (true/false)"
+        required: false
+        default: "false"
+      allow_docs_only_pr:
+        description: "Allow PRs with docs-only changes (true/false)"
+        required: false
+        default: "false"
 
 permissions:
   contents: write
