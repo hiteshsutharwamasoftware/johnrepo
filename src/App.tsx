@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import "./App.css"
 import { useWidgetUser } from "./hooks/useWidget"
 import { useAuth } from "./contexts/AuthContext"
@@ -6,8 +6,17 @@ import { useAuth } from "./contexts/AuthContext"
 function App() {
   const [query, setQuery] = useState("")
   const [submitted, setSubmitted] = useState<string | null>(null)
-  const [color, setColor] = useState<string>("#9135ff")
+  const [color, setColor] = useState<string>("#aa3bff")
   const { user } = useAuth()
+
+  // Persist selected color to localStorage
+  useEffect(() => {
+    const saved = localStorage.getItem('homepage.color')
+    if (saved) setColor(saved)
+  }, [])
+  useEffect(() => {
+    localStorage.setItem('homepage.color', color)
+  }, [color])
 
   useWidgetUser(
     user
@@ -64,6 +73,25 @@ function App() {
           />
           <button type="submit" className="submit">Submit</button>
         </form>
+        {/* Color Picker */}
+        <div className="color-picker" role="group" aria-labelledby="color-picker-label">
+          <label id="color-picker-label" htmlFor="homepage-color">Choose a color</label>
+          <input
+            id="homepage-color"
+            type="color"
+            value={color}
+            onChange={(e) => setColor(e.target.value)}
+            aria-label="Homepage color picker"
+          />
+          <div
+            className="color-preview"
+            data-testid="color-preview"
+            aria-label={`Selected color ${color}`}
+            role="img"
+            style={{ backgroundColor: color }}
+          />
+          <span className="color-value" aria-live="polite">{color}</span>
+        </div>
         {submitted && (
           <p className="submitted" role="status" aria-live="polite">
             You entered: <strong>{submitted}</strong>
