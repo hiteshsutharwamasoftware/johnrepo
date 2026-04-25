@@ -217,6 +217,10 @@
   clip: rect(1px, 1px, 1px, 1px);
   white-space: nowrap;
 }
+/* Homepage color picker styles */
+.homepage-color-picker { display: flex; align-items: center; gap: 10px; }
+.selected-color { margin: 0; color: var(--text-h); }
+.color-swatch { display: inline-block; width: 16px; height: 16px; border: 1px solid currentColor; margin-inline-start: 8px; vertical-align: -2px; }
 /* Homepage textbox styles */
 
 /* Color picker styles */
