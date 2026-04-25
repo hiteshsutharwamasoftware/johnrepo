@@ -1,9 +1,9 @@
 # As a user, I want to toggle between light and dark themes
 
-<!-- verity-story-sync {"storyId":"2247d566-50c4-4929-90f1-937e7694f24d","version":1,"origin":"verity"} -->
+<!-- verity-story-sync {"storyId":"2247d566-50c4-4929-90f1-937e7694f24d","version":2,"origin":"verity"} -->
 
 - Story ID: `2247d566-50c4-4929-90f1-937e7694f24d`
-- Status: `proposed`
+- Status: `active`
 - Priority: `high`
 - Path: `.verity/user-stories/2247d566-50c4-4929-90f1-937e7694f24d-as-a-user-i-want-to-toggle-between-light-and-dark-themes.md`
 
