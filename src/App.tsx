@@ -3,11 +3,13 @@ import "./App.css"
 import { useWidgetUser } from "./hooks/useWidget"
 import { useAuth } from "./contexts/AuthContext"
 
+import { useTheme } from "./contexts/ThemeContext"
 function App() {
   const [query, setQuery] = useState("")
   const [submitted, setSubmitted] = useState<string | null>(null)
   const [color, setColor] = useState<string>("#aa3bff")
   const { user } = useAuth()
+  const { theme, toggleTheme } = useTheme()
 
   // Persist selected color to localStorage
   useEffect(() => {
@@ -39,6 +41,18 @@ function App() {
     <>
       <section id="center">
         <h1>Welcome</h1>
+        {/* Theme toggle */}
+        <div>
+          <button
+            type="button"
+            aria-pressed={theme === 'dark'}
+            aria-label="Toggle dark mode"
+            onClick={toggleTheme}
+            className="counter"
+          >
+            {theme === 'dark' ? 'Switch to Light' : 'Switch to Dark'}
+          </button>
+        </div>
         <form
           className="homepage-textbox"
           onSubmit={(e) => {
