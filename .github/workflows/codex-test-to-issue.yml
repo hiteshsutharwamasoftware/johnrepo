@@ -61,6 +61,7 @@ jobs:
       - name: Resolve GitHub write token (optional GitHub App)
         id: gh_write_token
         if: ${{ steps.gh_write_cfg.outputs.enabled == 'true' }}
+        continue-on-error: true
         uses: actions/create-github-app-token@v1
         with:
           app-id: ${{ secrets.VERITY_GITHUB_APP_ID }}
