@@ -1,21 +1,22 @@
 version: 1
 verity:
-  project_id: "ae4f815f-a49c-4a6e-acb0-7c5e4c8164bf"
-  callback_url: "https://bf79-2409-40d4-1067-c294-e817-98c7-959d-edb9.ngrok-free.app"
-  bootstrap_version: "v1"
-
+  project_id: ae4f815f-a49c-4a6e-acb0-7c5e4c8164bf
+  callback_url: https://bf79-2409-40d4-1067-c294-e817-98c7-959d-edb9.ngrok-free.app
+  bootstrap_version: v1
 commands:
-  setup: []
-  test: []
-  build: []
+  setup:
+  - npm ci
+  test:
+  - npm test
+  build:
+  - npm run build
   deploy: []
-
 policies:
   pr_review:
     enabled: true
-    label_required: "verity:agent"
+    label_required: verity:agent
   openai_guardrail:
     enabled: true
   documentation:
     auto_mode: true
-    handoff_file: "docs/AI_HANDOFF.md"
+    handoff_file: docs/AI_HANDOFF.md

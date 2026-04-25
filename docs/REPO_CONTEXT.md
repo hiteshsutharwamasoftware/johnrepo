@@ -11,16 +11,16 @@ This file helps Verity/Codex understand how to work in this repository.
 These are written into `.verity/config.yml` (in a PR) if empty.
 
 ### Setup
-__SUGGESTED_SETUP__
+- `npm ci`
 
 ### Tests
-__SUGGESTED_TEST__
+- `npm test`
 
 ### Build
-__SUGGESTED_BUILD__
+- `npm run build`
 
 ### Deploy
-__SUGGESTED_DEPLOY__
+_(none detected)_
 
 ## Notes for humans
 - If you change commands here, also update `.verity/config.yml`.
@@ -28,8 +28,8 @@ __SUGGESTED_DEPLOY__
 
 ## Auto Documentation Snapshot
 <!-- verity:auto-doc:start -->
-- Commit: `fd4e2910d21e159f973c90645f257468a27e0f22`
-- Commit date: `2026-04-25T06:40:46Z`
+- Commit: `3f8e27c3332164ca6aecdb8a3bfbfa94c8ce8f63`
+- Commit date: `2026-04-25T07:14:26Z`
 - Repository: `hiteshsutharwamasoftware/johnrepo`
 - Default branch: `main`
 
