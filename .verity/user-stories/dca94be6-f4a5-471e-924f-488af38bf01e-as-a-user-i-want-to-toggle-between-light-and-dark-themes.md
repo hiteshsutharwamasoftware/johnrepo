@@ -1,6 +1,6 @@
 # As a user, I want to toggle between light and dark themes
 
-<!-- verity-story-sync {"storyId":"dca94be6-f4a5-471e-924f-488af38bf01e","version":2,"origin":"verity"} -->
+<!-- verity-story-sync {"storyId":"dca94be6-f4a5-471e-924f-488af38bf01e","version":3,"origin":"verity"} -->
 
 - Story ID: `dca94be6-f4a5-471e-924f-488af38bf01e`
 - Status: `active`
