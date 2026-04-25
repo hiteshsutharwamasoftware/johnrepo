@@ -26,7 +26,6 @@ REQUIRED_WORKFLOWS = [
 
 PLACEHOLDER_BLOCKLIST = [
     "http://localhost:3001/api/callbacks/github-actions",
-    "ae4f815f-a49c-4a6e-acb0-7c5e4c8164bf",
 ]
 
 # Allowlist prefixes (repo-relative, forward-slash)
