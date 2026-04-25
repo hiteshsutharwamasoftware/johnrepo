@@ -5,22 +5,22 @@ This file helps Verity/Codex understand how to work in this repository.
 ## What Verity detected
 - Detected at: 2026-04-24 09:54:58 UTC
 - Repo: hiteshsutharwamasoftware/johnrepo
-- Default branch: main
+- Default branch: verity/bootstrap-v1-46d803306d57
 
 ## Suggested commands (review before enabling automation)
 These are written into `.verity/config.yml` (in a PR) if empty.
 
 ### Setup
-- `npm ci`
+__SUGGESTED_SETUP__
 
 ### Tests
-- `npm test`
+__SUGGESTED_TEST__
 
 ### Build
-- `npm run build`
+__SUGGESTED_BUILD__
 
 ### Deploy
-_(none detected)_
+__SUGGESTED_DEPLOY__
 
 ## Notes for humans
 - If you change commands here, also update `.verity/config.yml`.
@@ -28,8 +28,8 @@ _(none detected)_
 
 ## Auto Documentation Snapshot
 <!-- verity:auto-doc:start -->
-- Commit: `2bbdbe4c0390e274ffb9dcf5e0bfe3bf80aaeacd`
-- Commit date: `2026-04-24T11:55:59Z`
+- Commit: `fd4e2910d21e159f973c90645f257468a27e0f22`
+- Commit date: `2026-04-25T06:40:46Z`
 - Repository: `hiteshsutharwamasoftware/johnrepo`
 - Default branch: `main`
 
