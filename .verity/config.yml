@@ -1,6 +1,6 @@
 version: 1
 verity:
-  project_id: d84fc86a-da51-4fe2-bbd2-d9fdf2fa3929
+  project_id: ae4f815f-a49c-4a6e-acb0-7c5e4c8164bf
   callback_url: https://bf79-2409-40d4-1067-c294-e817-98c7-959d-edb9.ngrok-free.app
   bootstrap_version: v1
 commands:

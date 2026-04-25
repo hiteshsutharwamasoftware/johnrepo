@@ -1,9 +1,29 @@
 import { useState } from "react"
 import "./App.css"
+import { useWidgetUser } from "./hooks/useWidget"
+import { useAuth } from "./contexts/AuthContext"
 
 function App() {
   const [query, setQuery] = useState("")
   const [submitted, setSubmitted] = useState<string | null>(null)
+  const { user } = useAuth()
+
+  useWidgetUser(
+    user
+      ? {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          role: user.role,
+          tenant: user.tenant
+            ? {
+                id: user.tenant.id,
+                name: user.tenant.name
+              }
+            : undefined
+        }
+      : null
+  )
 
   return (
     <>
