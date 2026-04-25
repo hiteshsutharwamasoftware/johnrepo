@@ -1,9 +1,9 @@
 # As a homepage user, I want to see only one color picker to avoid confusion
 
-<!-- verity-story-sync {"storyId":"f8464a66-4f0a-48d8-9644-326133e4f7bd","version":1,"origin":"verity"} -->
+<!-- verity-story-sync {"storyId":"f8464a66-4f0a-48d8-9644-326133e4f7bd","version":2,"origin":"verity"} -->
 
 - Story ID: `f8464a66-4f0a-48d8-9644-326133e4f7bd`
-- Status: `proposed`
+- Status: `active`
 - Priority: `medium`
 - Path: `.verity/user-stories/f8464a66-4f0a-48d8-9644-326133e4f7bd-as-a-homepage-user-i-want-to-see-only-one-color-picker-to-av.md`
 
