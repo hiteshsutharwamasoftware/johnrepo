@@ -218,6 +218,40 @@
   white-space: nowrap;
 }
 /* Homepage textbox styles */
+
+/* Color picker styles */
+.color-picker {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.color-picker label {
+  font-weight: 500;
+  color: var(--text-h);
+}
+
+.color-picker input[type=color] {
+  block-size: 36px;
+  inline-size: 52px;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg);
+}
+
+.color-preview {
+  inline-size: 44px;
+  block-size: 36px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+
+.color-value {
+  font-family: var(--mono);
+  color: var(--text-h);
+}
 .homepage-input {
   display: flex;
   gap: 8px;
