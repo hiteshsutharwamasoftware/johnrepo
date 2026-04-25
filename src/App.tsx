@@ -39,21 +39,6 @@ function App() {
     <>
       <section id="center">
         <h1>Welcome</h1>
-        {/* Color picker for homepage personalization */}
-        <div className="homepage-color-picker" role="group" aria-label="Color selection">
-          <label htmlFor="color-picker" className="visually-hidden">Pick a color</label>
-          <input
-            id="color-picker"
-            type="color"
-            value={color}
-            onChange={(e) => setColor(e.target.value)}
-            aria-label="Color picker"
-          />
-          <p className="selected-color" aria-live="polite">
-            Selected color: <strong>{color}</strong>
-            <span aria-hidden="true" className="color-swatch" style={{ background: color }} />
-          </p>
-          </div>
         <form
           className="homepage-textbox"
           onSubmit={(e) => {
