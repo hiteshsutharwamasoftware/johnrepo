@@ -296,6 +296,10 @@ jobs:
             git diff --name-only | grep -E '^(codex-prompt\.md|codex-output\.md|issue_context\.md|__pycache__/|.*\.pyc$|frontend/node_modules/\.vite($|/)|frontend/node_modules/\.vite-[^/]+/)'
           )
 
+          # sync_repo_docs.py rewrites these docs on every run; restore them so docs-only guard
+          # does not block code workflows when Codex produced no non-doc changes.
+          git restore --source=HEAD --staged --worktree -- docs/REPO_CONTEXT.md docs/AI_HANDOFF.md 2>/dev/null || true
+
       - name: Guard against docs-only PRs
         env:
           ALLOW_DOCS_ONLY_PR: ${{ inputs.allow_docs_only_pr }}
