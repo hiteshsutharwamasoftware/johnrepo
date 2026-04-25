@@ -1,9 +1,9 @@
 # As a user, I want a button to toggle between dark and light theme modes
 
-<!-- verity-story-sync {"storyId":"48ea7926-24a2-4f18-b0f1-5b3d981bbc62","version":1,"origin":"verity"} -->
+<!-- verity-story-sync {"storyId":"48ea7926-24a2-4f18-b0f1-5b3d981bbc62","version":2,"origin":"verity"} -->
 
 - Story ID: `48ea7926-24a2-4f18-b0f1-5b3d981bbc62`
-- Status: `proposed`
+- Status: `active`
 - Priority: `high`
 - Path: `.verity/user-stories/48ea7926-24a2-4f18-b0f1-5b3d981bbc62-as-a-user-i-want-a-button-to-toggle-between-dark-and-light-t.md`
 
