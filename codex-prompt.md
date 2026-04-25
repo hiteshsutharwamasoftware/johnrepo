@@ -16,4 +16,4 @@ Steps:
 
 ## Scope
 
-As a homepage visitor, I want a textbox on the homepage - As a general user or visitor accessing the homepage, I want to see and use a textbox prominently displayed on the homepage. This allows users to input information (such as search queries, feedback, or other data as required by the application) immediately upon landing on the site. Providing a textbox on the homepage improves user engagement, streamlines user workflows, and supports key business objectives such as increasing user interacti
+As a homepage user, I want to select a color using a color picker - Homepage visitors (end-users) want the ability to choose a color directly from the homepage using an intuitive color picker component. This feature allows users to personalize their experience, select theme colors, or preview color-dependent features. Providing a color picker enhances user engagement and supports customization, which can improve satisfaction and retention. The color picker should be easily accessible, visually i
