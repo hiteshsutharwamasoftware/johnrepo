@@ -1,6 +1,6 @@
 # As a homepage visitor, I want the color picker to be removed from the homepage
 
-<!-- verity-story-sync {"storyId":"e92cf5f9-a526-4cca-a694-22157505409e","version":2,"origin":"verity"} -->
+<!-- verity-story-sync {"storyId":"e92cf5f9-a526-4cca-a694-22157505409e","version":3,"origin":"verity"} -->
 
 - Story ID: `e92cf5f9-a526-4cca-a694-22157505409e`
 - Status: `active`
