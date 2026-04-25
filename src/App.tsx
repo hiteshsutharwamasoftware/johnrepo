@@ -1,12 +1,18 @@
-import { useEffect, useState } from "react"
-import "./App.css"
-import { useWidgetUser } from "./hooks/useWidget"
-import { useAuth } from "./contexts/AuthContext"
+import { useEffect, useState } from 'react'
+import './App.css'
+import { useWidgetUser } from './hooks/useWidget'
+import { useAuth } from './contexts/AuthContext'
+
+type Theme = 'light' | 'dark'
+const THEME_KEY = 'app.theme'
 
 function App() {
-  const [query, setQuery] = useState("")
+  const [query, setQuery] = useState('')
   const [submitted, setSubmitted] = useState<string | null>(null)
-  const [color, setColor] = useState<string>("#aa3bff")
+  const [color, setColor] = useState<string>('#aa3bff')
+  const [theme, setTheme] = useState<Theme>(
+    () => (document?.documentElement.getAttribute('data-theme') as Theme) || 'light'
+  )
   const { user } = useAuth()
 
   // Persist selected color to localStorage
@@ -18,6 +24,7 @@ function App() {
     localStorage.setItem('homepage.color', color)
   }, [color])
 
+  // Sync mock widget user
   useWidgetUser(
     user
       ? {
@@ -35,8 +42,42 @@ function App() {
       : null
   )
 
+  // Load saved theme once on mount
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(THEME_KEY) as Theme | null
+      if (saved === 'light' || saved === 'dark') {
+        setTheme(saved)
+        document.documentElement.setAttribute('data-theme', saved)
+      }
+    } catch {
+      // ignore
+    }
+  }, [])
+
+  // Persist and apply theme whenever it changes
+  useEffect(() => {
+    try {
+      document.documentElement.setAttribute('data-theme', theme)
+      localStorage.setItem(THEME_KEY, theme)
+    } catch {
+      // ignore
+    }
+  }, [theme])
+
+  const toggleTheme = () => setTheme((t) => (t === 'light' ? 'dark' : 'light'))
+
   return (
     <>
+      <button
+        type="button"
+        className="theme-toggle"
+        aria-pressed={theme === 'dark'}
+        aria-label="Toggle color theme"
+        onClick={toggleTheme}
+      >
+        {theme === 'light' ? 'Dark mode' : 'Light mode'}
+      </button>
       <section id="center">
         <h1>Welcome</h1>
         <form
@@ -71,7 +112,7 @@ function App() {
           <div
             className="color-preview"
             data-testid="color-preview"
-            aria-label={`Selected color ${color}`}
+            aria-label="Selected color"
             role="img"
             style={{ backgroundColor: color }}
           />
