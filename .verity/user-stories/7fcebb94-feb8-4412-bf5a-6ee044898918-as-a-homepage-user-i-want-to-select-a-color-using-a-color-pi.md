@@ -1,9 +1,9 @@
 # As a homepage user, I want to select a color using a color picker
 
-<!-- verity-story-sync {"storyId":"7fcebb94-feb8-4412-bf5a-6ee044898918","version":1,"origin":"verity"} -->
+<!-- verity-story-sync {"storyId":"7fcebb94-feb8-4412-bf5a-6ee044898918","version":2,"origin":"verity"} -->
 
 - Story ID: `7fcebb94-feb8-4412-bf5a-6ee044898918`
-- Status: `proposed`
+- Status: `active`
 - Priority: `medium`
 - Path: `.verity/user-stories/7fcebb94-feb8-4412-bf5a-6ee044898918-as-a-homepage-user-i-want-to-select-a-color-using-a-color-pi.md`
 
