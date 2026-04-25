@@ -1,6 +1,6 @@
 # As a homepage user, I want to select a color using a color picker
 
-<!-- verity-story-sync {"storyId":"691af28c-ca62-49a4-b50d-005c9cee5909","version":4,"origin":"verity"} -->
+<!-- verity-story-sync {"storyId":"691af28c-ca62-49a4-b50d-005c9cee5909","version":5,"origin":"verity"} -->
 
 - Story ID: `691af28c-ca62-49a4-b50d-005c9cee5909`
 - Status: `active`
