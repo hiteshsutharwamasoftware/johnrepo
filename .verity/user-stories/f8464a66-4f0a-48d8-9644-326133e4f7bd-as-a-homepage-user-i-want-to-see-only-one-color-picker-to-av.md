@@ -1,6 +1,6 @@
 # As a homepage user, I want to see only one color picker to avoid confusion
 
-<!-- verity-story-sync {"storyId":"f8464a66-4f0a-48d8-9644-326133e4f7bd","version":2,"origin":"verity"} -->
+<!-- verity-story-sync {"storyId":"f8464a66-4f0a-48d8-9644-326133e4f7bd","version":3,"origin":"verity"} -->
 
 - Story ID: `f8464a66-4f0a-48d8-9644-326133e4f7bd`
 - Status: `active`
