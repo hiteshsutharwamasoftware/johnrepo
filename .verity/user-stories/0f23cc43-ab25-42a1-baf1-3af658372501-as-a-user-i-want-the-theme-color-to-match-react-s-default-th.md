@@ -1,6 +1,6 @@
 # As a user, I want the theme color to match React's default theme
 
-<!-- verity-story-sync {"storyId":"0f23cc43-ab25-42a1-baf1-3af658372501","version":1,"origin":"verity"} -->
+<!-- verity-story-sync {"storyId":"0f23cc43-ab25-42a1-baf1-3af658372501","version":2,"origin":"verity"} -->
 
 - Story ID: `0f23cc43-ab25-42a1-baf1-3af658372501`
 - Status: `proposed`
