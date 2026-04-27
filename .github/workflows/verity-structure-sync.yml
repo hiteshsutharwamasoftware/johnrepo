@@ -1,0 +1,119 @@
+# Verity Structure Sync Workflow
+# 
+# Detects repository structure changes and notifies Verity backend.
+# Triggered on pushes to main that modify structure-relevant files.
+#
+# This workflow:
+# 1. Runs detect_repo_structure.py to analyze the repo
+# 2. Sends the structure info to Verity via webhook
+# 3. Verity updates the repo's structureInfo in the database
+#
+# This enables automatic routing updates when project structure changes.
+
+name: Verity Structure Sync
+
+on:
+  push:
+    branches: [main, master]
+    paths:
+      - 'package.json'
+      - 'frontend/package.json'
+      - 'backend/package.json'
+      - 'template.yaml'
+      - 'template.yml'
+      - 'serverless.yml'
+      - 'serverless.yaml'
+      - 'requirements.txt'
+      - 'backend/requirements.txt'
+      - '.verity/config.yml'
+      - 'next.config.js'
+      - 'next.config.mjs'
+      - 'vite.config.ts'
+      - 'vite.config.js'
+  workflow_dispatch:
+    inputs:
+      force_sync:
+        description: "Force structure sync even if no changes detected"
+        required: false
+        default: "false"
+
+permissions:
+  contents: read
+
+jobs:
+  sync_structure:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: python -m pip install --upgrade pip pyyaml
+
+      - name: Load Verity config
+        id: cfg
+        run: |
+          python - <<'PY'
+          import os
+          from pathlib import Path
+          import yaml
+
+          cfg_path = Path('.verity/config.yml')
+          cfg = yaml.safe_load(cfg_path.read_text()) if cfg_path.exists() else {}
+          verity = cfg.get('verity', {}) or {}
+          
+          out = os.environ['GITHUB_OUTPUT']
+          with open(out, 'a', encoding='utf-8') as f:
+            f.write(f"project_id={str(verity.get('project_id', '')).strip()}\n")
+            f.write(f"callback_url={str(verity.get('callback_url', '')).strip()}\n")
+          PY
+
+      - name: Detect repository structure
+        id: detect
+        run: |
+          # Run detection script and save output
+          python scripts/detect_repo_structure.py > structure.json
+          
+          # Compact JSON for output (FIX #12: safe JSON handling)
+          STRUCTURE=$(cat structure.json | jq -c .)
+          echo "structure=$STRUCTURE" >> "$GITHUB_OUTPUT"
+          
+          # Log for debugging
+          echo "Detected structure:"
+          cat structure.json | jq .
+
+      - name: Notify Verity of structure change
+        if: ${{ steps.cfg.outputs.callback_url && steps.cfg.outputs.callback_url != '__VERITY_CALLBACK_URL__' }}
+        env:
+          VERITY_PROJECT_TOKEN: ${{ secrets.VERITY_PROJECT_TOKEN }}
+          VERITY_PROJECT_ID: ${{ steps.cfg.outputs.project_id }}
+          VERITY_CALLBACK_URL: ${{ steps.cfg.outputs.callback_url }}
+        run: |
+          # FIX #12: Use jq for safe JSON construction to prevent shell injection
+          jq -n \
+            --arg repo "${{ github.repository }}" \
+            --arg project_id "$VERITY_PROJECT_ID" \
+            --arg commit "${{ github.sha }}" \
+            --slurpfile structure structure.json \
+            '{
+              "event": "structure_update",
+              "repository": $repo,
+              "project_id": $project_id,
+              "commit": $commit,
+              "structure": $structure[0]
+            }' | \
+          curl -sS -X POST "${VERITY_CALLBACK_URL}/api/callbacks/structure-update" \
+            -H "Authorization: Bearer $VERITY_PROJECT_TOKEN" \
+            -H "Content-Type: application/json" \
+            --data-binary @- || echo "Warning: Callback failed (non-fatal)"
+
+      - name: Skip notification (no callback configured)
+        if: ${{ !steps.cfg.outputs.callback_url || steps.cfg.outputs.callback_url == '__VERITY_CALLBACK_URL__' }}
+        run: |
+          echo "Skipping Verity notification: callback URL not configured"
+          echo "Structure detected:"
+          cat structure.json | jq .
