@@ -1,9 +1,9 @@
 # As a visitor, I want the homepage to display only a 'Welcome' message
 
-<!-- verity-story-sync {"storyId":"60406213-fcb4-4c79-b6e8-b566b6867410","version":1,"origin":"verity"} -->
+<!-- verity-story-sync {"storyId":"60406213-fcb4-4c79-b6e8-b566b6867410","version":2,"origin":"verity"} -->
 
 - Story ID: `60406213-fcb4-4c79-b6e8-b566b6867410`
-- Status: `proposed`
+- Status: `active`
 - Priority: `high`
 - Path: `.verity/user-stories/60406213-fcb4-4c79-b6e8-b566b6867410-as-a-visitor-i-want-the-homepage-to-display-only-a-welcome-m.md`
 
