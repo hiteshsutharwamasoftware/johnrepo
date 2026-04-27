@@ -12,7 +12,7 @@ commands:
 
 policies:
   pr_review:
-    enabled: true
+    enabled: false
     label_required: "verity:agent"
   openai_guardrail:
     enabled: true
