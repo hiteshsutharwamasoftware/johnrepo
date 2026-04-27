@@ -1,0 +1,32 @@
+(node:158) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+TAP version 13
+# Subtest: /home/runner/work/johnrepo/johnrepo/tests/colorpicker.test.js
+ok 1 - /home/runner/work/johnrepo/johnrepo/tests/colorpicker.test.js
+  ---
+  duration_ms: 55.127902
+  ...
+# Subtest: /home/runner/work/johnrepo/johnrepo/tests/homepage-border.test.js
+ok 2 - /home/runner/work/johnrepo/johnrepo/tests/homepage-border.test.js
+  ---
+  duration_ms: 65.959338
+  ...
+# Subtest: /home/runner/work/johnrepo/johnrepo/tests/homepage.test.js
+ok 3 - /home/runner/work/johnrepo/johnrepo/tests/homepage.test.js
+  ---
+  duration_ms: 67.130875
+  ...
+# Subtest: /home/runner/work/johnrepo/johnrepo/tests/welcome-noborder.test.js
+ok 4 - /home/runner/work/johnrepo/johnrepo/tests/welcome-noborder.test.js
+  ---
+  duration_ms: 52.438883
+  ...
+1..4
+# tests 4
+# suites 0
+# pass 4
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 120.893788

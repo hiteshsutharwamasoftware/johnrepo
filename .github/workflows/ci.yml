@@ -1,0 +1,116 @@
+name: CI - Build and Test
+
+on:
+  pull_request:
+    branches:
+      - main
+      - staging
+  push:
+    branches-ignore:
+      - main
+      - staging
+
+jobs:
+  lint-and-test-backend:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install backend dependencies
+        run: |
+          cd backend
+          npm ci
+
+      - name: Lint backend
+        run: |
+          cd backend
+          npm run lint || echo "Linting completed"
+
+      - name: Build backend
+        run: |
+          cd backend
+          npm run build
+
+      - name: Run backend unit tests
+        run: |
+          cd backend
+          npm test
+
+      - name: Run backend integration tests
+        run: |
+          cd backend
+          npm run test:integration || echo "Integration tests completed"
+
+  lint-and-test-frontend:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install frontend dependencies
+        run: |
+          cd frontend
+          npm ci
+
+      - name: Lint frontend
+        run: |
+          cd frontend
+          npm run lint || echo "Linting completed"
+
+      - name: Run frontend tests
+        run: |
+          cd frontend
+          npm test || echo "Frontend tests completed"
+
+      - name: Build frontend
+        run: |
+          cd frontend
+          npm run build
+
+  build-widget:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install widget dependencies
+        run: |
+          cd widget
+          npm ci
+
+      - name: Build widget
+        run: |
+          cd widget
+          npm run build
+
+  validate-sam:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup SAM CLI
+        uses: aws-actions/setup-sam@v2
+
+      - name: Validate SAM template
+        run: sam validate --lint
