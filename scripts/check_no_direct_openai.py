@@ -25,7 +25,8 @@ REQUIRED_WORKFLOWS = [
 ]
 
 PLACEHOLDER_BLOCKLIST = [
-    "http://localhost:3001/api/callbacks/github-actions",
+    "https://9397-2409-40d4-1067-c294-e817-98c7-959d-edb9.ngrok-free.app/api/callbacks/github-actions",
+    "94be892f-5c44-4580-8bc5-3c1077e1b622",
 ]
 
 # Allowlist prefixes (repo-relative, forward-slash)
