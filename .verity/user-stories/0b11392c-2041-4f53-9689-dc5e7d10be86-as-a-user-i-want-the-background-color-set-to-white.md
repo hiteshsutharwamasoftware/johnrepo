@@ -1,6 +1,6 @@
 # As a user, I want the background color set to white
 
-<!-- verity-story-sync {"storyId":"0b11392c-2041-4f53-9689-dc5e7d10be86","version":1,"origin":"verity"} -->
+<!-- verity-story-sync {"storyId":"0b11392c-2041-4f53-9689-dc5e7d10be86","version":2,"origin":"verity"} -->
 
 - Story ID: `0b11392c-2041-4f53-9689-dc5e7d10be86`
 - Status: `proposed`
