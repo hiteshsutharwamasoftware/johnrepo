@@ -5,7 +5,7 @@ import { readFileSync } from "node:fs"
 
 const srcPath = "src/App.tsx"
 
-test("No color picker is present on the homepage", () => {
+test("No color picker is present on the homepage (textbox allowed)", () => {
   const source = readFileSync(srcPath, "utf8")
   assert.doesNotMatch(source, /<input[\s\S]*?type=\"color\"[\s\S]*?>/i, "Color input should be removed")
   assert.doesNotMatch(source, /color-preview|color-picker/i, "Color preview or group should be absent")
