@@ -9,8 +9,8 @@ It is intended to give new developers and AI agents immediate, accurate context.
 ## Snapshot
 - Repository: `hiteshsutharwamasoftware/johnrepo`
 - Default branch: `main`
-- Commit: `538a14101bf60bbb7daf67b2ef8f909a831bb385`
-- Commit date: `2026-04-25T10:01:32Z`
+- Commit: `3dd530303ba7f8b25f31f633448c4ce9b05928a5`
+- Commit date: `2026-04-27T04:30:55Z`
 
 ## Start Here
 1. Read `AGENTS.md`.
@@ -20,11 +20,11 @@ It is intended to give new developers and AI agents immediate, accurate context.
 
 ## Run Commands
 Setup:
-_(none configured)_
+- `npm ci`
 Tests:
-_(none configured)_
+- `npm test`
 Build:
-_(none configured)_
+- `npm run build`
 Deploy:
 _(none configured)_
 
