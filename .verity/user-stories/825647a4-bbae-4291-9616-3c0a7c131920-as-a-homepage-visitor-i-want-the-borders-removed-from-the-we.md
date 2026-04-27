@@ -1,9 +1,9 @@
 # As a homepage visitor, I want the borders removed from the Welcome text
 
-<!-- verity-story-sync {"storyId":"825647a4-bbae-4291-9616-3c0a7c131920","version":1,"origin":"verity"} -->
+<!-- verity-story-sync {"storyId":"825647a4-bbae-4291-9616-3c0a7c131920","version":2,"origin":"verity"} -->
 
 - Story ID: `825647a4-bbae-4291-9616-3c0a7c131920`
-- Status: `proposed`
+- Status: `active`
 - Priority: `medium`
 - Path: `.verity/user-stories/825647a4-bbae-4291-9616-3c0a7c131920-as-a-homepage-visitor-i-want-the-borders-removed-from-the-we.md`
 
