@@ -28,18 +28,18 @@ _(none configured)_
 
 ## Auto Documentation Snapshot
 <!-- verity:auto-doc:start -->
-- Commit: `538a14101bf60bbb7daf67b2ef8f909a831bb385`
-- Commit date: `2026-04-25T10:01:32Z`
+- Commit: `556086a249d4373c51508ef2cba2d3e07cb03e1c`
+- Commit date: `2026-04-27T11:12:43Z`
 - Repository: `hiteshsutharwamasoftware/johnrepo`
 - Default branch: `main`
 
 ### Configured Commands
 Setup:
-_(none configured)_
+- `npm ci`
 Tests:
-_(none configured)_
+- `npm test`
 Build:
-_(none configured)_
+- `npm run build`
 Deploy:
 _(none configured)_
 
@@ -65,5 +65,5 @@ _(none configured)_
 
 ### Enabled Policy Flags
 - `- `openai_guardrail.enabled`: `True``
-- `- `pr_review.enabled`: `True``
+- `- `pr_review.enabled`: `False``
 <!-- verity:auto-doc:end -->
