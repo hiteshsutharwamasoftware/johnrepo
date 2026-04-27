@@ -1,6 +1,6 @@
 # As a frontend developer, I want the HTML in index.html to be valid and parseable
 
-<!-- verity-story-sync {"storyId":"191c67e6-450d-43f6-8da2-600ab46386da","version":2,"origin":"verity"} -->
+<!-- verity-story-sync {"storyId":"191c67e6-450d-43f6-8da2-600ab46386da","version":3,"origin":"verity"} -->
 
 - Story ID: `191c67e6-450d-43f6-8da2-600ab46386da`
 - Status: `active`
