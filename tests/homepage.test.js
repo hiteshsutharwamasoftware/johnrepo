@@ -1,41 +1,29 @@
-// Node built-in tests validating homepage textbox behaviors (static assertions)
-import test from 'node:test'
-import assert from 'node:assert/strict'
-import { readFileSync } from 'node:fs'
+// Node built-in tests validating minimal homepage (static assertions)
+import test from "node:test"
+import assert from "node:assert/strict"
+import { readFileSync } from "node:fs"
 
-const srcPath = 'src/App.tsx'
+const srcPath = "src/App.tsx"
 
-test('Given homepage, a textbox is prominently displayed', () => {
-  const source = readFileSync(srcPath, 'utf8')
+test("Homepage shows only a Welcome message", () => {
+  const source = readFileSync(srcPath, "utf8")
   assert.match(
     source,
-    /<input[\s\S]*?type="text"[\s\S]*?>/i,
-    'Expected an <input type=text> on the homepage'
+    /<h1>\s*Welcome\s*<\/h1>/i,
+    "Expected a single Welcome heading on the homepage"
   )
 })
 
-test('Textbox accepts and displays user input (controlled input present)', () => {
-  const source = readFileSync(srcPath, 'utf8')
-  // Check for controlled input props and onChange handler updating state
-  assert.match(
-    source,
-    /value=\{\s*query\s*}\s*[\s\S]*?onChange=\{\(e\)\s*=>\s*setQuery\(e\.target\.value\)\s*}/i,
-    'Expected controlled input with value bound to state and onChange updating it'
-  )
+test("No inputs, buttons, forms, or nav elements present", () => {
+  const source = readFileSync(srcPath, "utf8")
+  assert.doesNotMatch(source, /<input[\s\S]*?>/i, "Did not expect any <input> elements")
+  assert.doesNotMatch(source, /<button[\s\S]*?>/i, "Did not expect any <button> elements")
+  assert.doesNotMatch(source, /<form[\s\S]*?>/i, "Did not expect any <form> elements")
+  assert.doesNotMatch(source, /<nav[\s\S]*?>/i, "Did not expect any <nav> elements")
 })
 
-test('Submitting textbox processes input and provides feedback', () => {
-  const source = readFileSync(srcPath, 'utf8')
-  // onSubmit prevents default and sets  when value present
-  assert.match(
-    source,
-    /onSubmit=\{\(e\)\s*=>\s*\{[\s\S]*?e\.preventDefault\(\)\s*;?[\s\S]*?setSubmitted\(/i,
-    'Expected onSubmit handler that prevents default and sets submitted value'
-  )
-  // Feedback paragraph renders the submitted value
-  assert.match(
-    source,
-    /You entered:/i,
-    'Expected feedback text indicating the submitted value is shown'
-  )
+test("Welcome remains the only visible element after reload (static check)", () => {
+  const source = readFileSync(srcPath, "utf8")
+  const matches = source.match(/<h1>\s*Welcome\s*<\/h1>/gi) || []
+  assert.equal(matches.length, 1, "Expected only one Welcome heading present")
 })
