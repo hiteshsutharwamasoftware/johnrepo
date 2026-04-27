@@ -35,10 +35,6 @@ on:
         description: "Allow PRs with docs-only changes (true/false)"
         required: false
         default: "false"
-      auto_merge:
-        description: "Auto-merge the PR once all required checks pass (true/false)"
-        required: false
-        default: "false"
 
 permissions:
   contents: write
@@ -89,6 +85,7 @@ jobs:
       - name: Resolve GitHub write token (optional GitHub App)
         id: gh_write_token
         if: ${{ steps.gh_write_cfg.outputs.enabled == 'true' }}
+        continue-on-error: true
         uses: actions/create-github-app-token@v1
         with:
           app-id: ${{ secrets.VERITY_GITHUB_APP_ID }}
@@ -110,7 +107,7 @@ jobs:
       - name: Load .verity/config.yml
         id: cfg
         run: |
-          python - <<'PY'
+          python - <<'PY' > /tmp/verity-callback.json
           import os
           from pathlib import Path
           import yaml
@@ -141,8 +138,6 @@ jobs:
             f.write("build_cmds<<EOF\n" + "\n".join(norm_list(commands.get("build"))) + "\nEOF\n")
             f.write(f"pr_review_enabled={bool((policies.get('pr_review', {}) or {}).get('enabled', True))}\n")
             f.write(f"pr_review_label={str((policies.get('pr_review', {}) or {}).get('label_required','verity:agent')).strip()}\n")
-            docs_auto_mode = bool((policies.get('documentation', {}) or {}).get('auto_mode', False))
-            f.write(f"docs_auto_mode={'true' if docs_auto_mode else 'false'}\n")
           PY
         env:
           VERITY_CALLBACK_OVERRIDE: ${{ inputs.callback_url }}
@@ -186,7 +181,7 @@ jobs:
           }
           print(json.dumps(payload))
           PY
-          curl -sS -X POST "$VERITY_CALLBACK_URL" \
+            curl -sS -X POST "$VERITY_CALLBACK_URL" \
             -H "Authorization: Bearer $VERITY_PROJECT_TOKEN" \
             -H "Content-Type: application/json" \
             --data-binary @/tmp/verity-callback.json || true
@@ -250,10 +245,10 @@ jobs:
           safety-strategy: drop-sudo
           sandbox: workspace-write
           allow-bots: true
+          allow-bot-users: bluesky-atg-verity[bot]
           codex-args: '["--full-auto"]'
 
       - name: Sync docs context (auto document mode)
-        if: ${{ steps.cfg.outputs.docs_auto_mode == 'true' }}
         run: python scripts/sync_repo_docs.py
 
       - name: Run tests (configured)
@@ -267,153 +262,23 @@ jobs:
             echo "::endgroup::"
           done <<< "${{ steps.cfg.outputs.test_cmds }}"
 
-      - name: Install dependencies (for any modified package.json)
+      - name: Reinstall frontend dependencies before build
+        if: ${{ steps.cfg.outputs.build_cmds != '' && hashFiles('frontend/package-lock.json') != '' }}
+        run: |
+          set -euo pipefail
+          cd frontend
+          npm ci
+
+      - name: Run build (configured)
         if: ${{ steps.cfg.outputs.build_cmds != '' }}
-        run: |
-          set -euo pipefail
-          # Find ALL package.json files modified by Codex — any directory, any repo structure
-          modified=$(git diff --name-only HEAD | grep -E '(^|/)package\.json$' || true)
-          install_dirs=""
-          if [ -n "$modified" ]; then
-            while IFS= read -r f; do
-              d=$(dirname "$f")
-              echo "package.json changed in $d — running npm install"
-              (cd "$d" && npm install)
-              install_dirs="$install_dirs:$d:"
-            done <<< "$modified"
-          fi
-          # For every other JS project dir that has a lockfile, run npm ci to ensure deps are current
-          while IFS= read -r lockfile; do
-            d=$(dirname "$lockfile")
-            if [[ ":$install_dirs:" != *":$d:"* ]]; then
-              echo "Running npm ci in $d"
-              (cd "$d" && npm ci) || true
-            fi
-          done < <(find . -name 'package-lock.json' -not -path '*/node_modules/*')
-
-      - name: Run build pass 1 (capture errors for potential Codex fix)
-        id: build_pass1
-        if: ${{ steps.cfg.outputs.build_cmds != '' }}
-        continue-on-error: true
-        run: |
-          rm -f build-error.txt
-          build_failed=false
-          while IFS= read -r cmd; do
-            [ -z "$cmd" ] && continue
-            echo "::group::build: $cmd"
-            set +e
-            bash -lc "$cmd" 2>&1 | tee -a build-error.txt
-            cmd_exit=${PIPESTATUS[0]}
-            set -e
-            echo "::endgroup::"
-            if [ "$cmd_exit" -ne 0 ]; then
-              build_failed=true
-              break
-            fi
-          done <<< "${{ steps.cfg.outputs.build_cmds }}"
-          echo "build_failed=${build_failed}" >> "$GITHUB_OUTPUT"
-          if [ "$build_failed" = "true" ]; then
-            exit 1
-          fi
-
-      - name: Prepare Codex build-fix prompt
-        if: ${{ steps.build_pass1.outputs.build_failed == 'true' }}
-        run: |
-          set -euo pipefail
-          {
-            echo "## Codex Build Fix Pass"
-            echo ""
-            echo "The previous build failed. Fix ONLY the source files causing the errors below."
-            echo ""
-            echo "### Required process for EACH failing file:"
-            echo "1. **Read the full current content** of the file first — do not rewrite from memory."
-            echo "2. Apply a **minimal, surgical fix** — change only the lines causing the error."
-            echo "3. Write the fixed file using Python:"
-            echo '   ```python'
-            echo "   from pathlib import Path"
-            echo '   Path("path/to/file").write_text("""<full corrected content>""", encoding="utf-8")'
-            echo '   ```'
-            echo "4. Verify the file was written and has substantial content:"
-            echo '   ```python'
-            echo '   p = Path("path/to/file")'
-            echo '   assert p.stat().st_size > 50, f"Write failed: {p}"'
-            echo '   ```'
-            echo ""
-            echo "### Rules:"
-            echo "- Read the file BEFORE writing. Never overwrite with stale or partial content."
-            echo "- Preserve ALL existing code — only change what the error requires."
-            echo "- Do NOT add new features or refactor unrelated code."
-            echo "- If the error mentions a missing import or component, check if the file exists before creating it."
-            echo ""
-            echo "## Build error output"
-            echo ""
-            echo '```'
-            cat build-error.txt
-            echo '```'
-          } > codex-fix-prompt.md
-
-      - name: Run Codex pass 2 (fix build errors)
-        id: codex_fix
-        if: ${{ steps.build_pass1.outputs.build_failed == 'true' }}
-        uses: openai/codex-action@v1
-        with:
-          openai-api-key: ${{ secrets.OPENAI_API_KEY }}
-          model: ${{ vars.VERITY_CODEX_MODEL != '' && vars.VERITY_CODEX_MODEL || 'gpt-5' }}
-          prompt-file: codex-fix-prompt.md
-          output-file: codex-fix-output.md
-          safety-strategy: drop-sudo
-          sandbox: workspace-write
-          allow-bots: true
-          codex-args: '["--full-auto"]'
-
-      - name: Re-install dependencies after Codex build fix
-        if: ${{ steps.build_pass1.outputs.build_failed == 'true' }}
-        run: |
-          set -euo pipefail
-          modified=$(git diff --name-only HEAD | grep -E '(^|/)package\.json$' || true)
-          install_dirs=""
-          if [ -n "$modified" ]; then
-            while IFS= read -r f; do
-              d=$(dirname "$f")
-              echo "package.json changed in $d — running npm install"
-              (cd "$d" && npm install)
-              install_dirs="$install_dirs:$d:"
-            done <<< "$modified"
-          fi
-          while IFS= read -r lockfile; do
-            d=$(dirname "$lockfile")
-            if [[ ":$install_dirs:" != *":$d:"* ]]; then
-              echo "Running npm ci in $d"
-              (cd "$d" && npm ci) || true
-            fi
-          done < <(find . -name 'package-lock.json' -not -path '*/node_modules/*')
-
-      - name: Run build pass 2 (final)
-        if: ${{ steps.build_pass1.outputs.build_failed == 'true' }}
         run: |
           set -euo pipefail
           while IFS= read -r cmd; do
             [ -z "$cmd" ] && continue
-            echo "::group::build pass 2: $cmd"
+            echo "::group::build: $cmd"
             bash -lc "$cmd"
             echo "::endgroup::"
           done <<< "${{ steps.cfg.outputs.build_cmds }}"
-
-      - name: Upload artifacts (before cleanup)
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: verity-codex-dev-cycle
-          path: |
-            codex-prompt.md
-            codex-output.md
-            codex-fix-prompt.md
-            codex-fix-output.md
-            codex-conflict-prompt.md
-            codex-conflict-output.md
-            build-error.txt
-            issue_context.md
-          if-no-files-found: ignore
 
       - name: Clean generated artifacts before PR
         run: |
@@ -422,99 +287,19 @@ jobs:
           # Remove common local artifacts created during Codex/test/build execution.
           find . -type d -name '__pycache__' -prune -exec rm -rf {} +
           find . -type f -name '*.pyc' -delete
-          rm -f codex-prompt.md codex-output.md codex-fix-prompt.md codex-fix-output.md \
-                codex-conflict-prompt.md codex-conflict-output.md build-error.txt \
-                issue_context.md pr-body.md
+          rm -f codex-prompt.md codex-output.md issue_context.md
           rm -rf frontend/node_modules/.vite frontend/node_modules/.vite-* frontend/.vite
 
           # If these paths are tracked in this repo, restore them to avoid noisy PR diffs.
           while IFS= read -r path; do
             git restore --source=HEAD --staged --worktree -- "$path" || true
           done < <(
-            git diff --name-only | grep -E '^(codex-prompt\.md|codex-output\.md|codex-fix-prompt\.md|codex-fix-output\.md|codex-conflict-prompt\.md|codex-conflict-output\.md|build-error\.txt|issue_context\.md|pr-body\.md|__pycache__/|.*\.pyc$|frontend/node_modules/\.vite($|/)|frontend/node_modules/\.vite-[^/]+/)'
+            git diff --name-only | grep -E '^(codex-prompt\.md|codex-output\.md|issue_context\.md|__pycache__/|.*\.pyc$|frontend/node_modules/\.vite($|/)|frontend/node_modules/\.vite-[^/]+/)'
           )
 
-          # Restore auto-generated docs so they don't interfere with the docs-only guard.
-          # sync_repo_docs.py always rewrites these with the current commit SHA/timestamp;
-          # without this restore, runs where Codex produced no code changes would be blocked
-          # by the guard (docs-only detected → exit 1) even though no real fix was attempted.
+          # sync_repo_docs.py rewrites these docs on every run; restore them so docs-only guard
+          # does not block code workflows when Codex produced no non-doc changes.
           git restore --source=HEAD --staged --worktree -- docs/REPO_CONTEXT.md docs/AI_HANDOFF.md 2>/dev/null || true
-
-      - name: Sync with latest base branch (prevent stale PR base)
-        id: sync_base
-        run: |
-          set -euo pipefail
-          # Get the default branch name (more reliable than GITHUB_REF_NAME for workflow_dispatch)
-          base=$(git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@' || echo "${GITHUB_REF_NAME}")
-          git fetch origin "${base}" --quiet
-          new_commits=$(git rev-list --count HEAD..origin/${base} 2>/dev/null || echo "0")
-          if [ "$new_commits" = "0" ]; then
-            echo "Base branch is up to date."
-            echo "conflicts=false" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-          echo "Base branch has $new_commits new commit(s) since checkout — syncing."
-          # Stage all Codex working-tree changes before stashing (includes new/untracked files)
-          git add -A
-          stash_label="verity-codex-wip"
-          git stash push -m "$stash_label" 2>&1 || true
-          stashed=$(git stash list | grep -c "$stash_label" || echo "0")
-          # Fast-forward HEAD to latest base
-          git reset --hard "origin/${base}"
-          # Re-apply Codex changes on top of the updated base
-          if [ "$stashed" != "0" ]; then
-            if git stash pop 2>&1; then
-              echo "Stash applied cleanly — no conflicts."
-              echo "conflicts=false" >> "$GITHUB_OUTPUT"
-            else
-              echo "Conflicts detected when applying Codex changes onto updated base."
-              conflict_files=$(git diff --name-only --diff-filter=U || true)
-              echo "conflicts=true" >> "$GITHUB_OUTPUT"
-              printf 'conflict_files<<EOF\n%s\nEOF\n' "$conflict_files" >> "$GITHUB_OUTPUT"
-            fi
-          else
-            echo "No working-tree changes to restore."
-            echo "conflicts=false" >> "$GITHUB_OUTPUT"
-          fi
-
-      - name: Prepare Codex conflict-resolution prompt
-        if: ${{ steps.sync_base.outputs.conflicts == 'true' }}
-        env:
-          CONFLICT_FILES: ${{ steps.sync_base.outputs.conflict_files }}
-        run: |
-          set -euo pipefail
-          {
-            echo "## Codex Conflict Resolution Pass"
-            echo ""
-            echo "Your previous changes conflicted with the latest base branch after syncing."
-            echo "The following files have conflict markers (\`<<<<<<<\`, \`=======\`, \`>>>>>>>\`):"
-            echo ""
-            printf '%s\n' "${CONFLICT_FILES}" | while IFS= read -r f; do
-              [ -n "$f" ] && echo "- $f"
-            done
-            echo ""
-            echo "For each conflicted file:"
-            echo "1. Read the file to see the conflict markers."
-            echo "2. Resolve by keeping BOTH the base changes AND your original intent."
-            echo "3. Write the resolved file using Python pathlib.Path.write_text() — no conflict markers in the final output."
-            echo "4. Verify the file has no remaining \`<<<<<<<\` markers."
-            echo ""
-            echo "Do NOT commit. Leave resolved files in the working tree."
-          } > codex-conflict-prompt.md
-
-      - name: Run Codex pass 3 (resolve conflicts)
-        id: codex_conflict
-        if: ${{ steps.sync_base.outputs.conflicts == 'true' }}
-        uses: openai/codex-action@v1
-        with:
-          openai-api-key: ${{ secrets.OPENAI_API_KEY }}
-          model: ${{ vars.VERITY_CODEX_MODEL != '' && vars.VERITY_CODEX_MODEL || 'gpt-5' }}
-          prompt-file: codex-conflict-prompt.md
-          output-file: codex-conflict-output.md
-          safety-strategy: drop-sudo
-          sandbox: workspace-write
-          allow-bots: true
-          codex-args: '["--full-auto"]'
 
       - name: Guard against docs-only PRs
         env:
@@ -544,35 +329,6 @@ jobs:
           echo "Docs-only change set detected. Set allow_docs_only_pr=true for documentation-only runs." >&2
           exit 1
 
-      - name: Prepare PR body
-        env:
-          CODEX_SUMMARY: ${{ steps.run_codex.outputs.final-message }}
-          CONFLICTS: ${{ steps.sync_base.outputs.conflicts }}
-          RUN_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
-          ISSUE_NUMBER: ${{ inputs.issue_number }}
-        run: |
-          set -euo pipefail
-          # Create pr-body.md in workspace root (same directory as this workflow file)
-          # The peter-evans/create-pull-request action will find it via body-file: pr-body.md
-          {
-            echo "This PR was created automatically by Verity/Codex."
-            echo ""
-            echo "- Workflow run: ${RUN_URL}"
-            echo "- Issue: ${ISSUE_NUMBER}"
-          } > pr-body.md
-          if [ "${CONFLICTS}" = "true" ]; then
-            {
-              echo ""
-              echo "> ⚠️ **Conflict warning**: This PR was rebased onto a newer base commit. Codex attempted to resolve merge conflicts automatically — please review the diff carefully."
-            } >> pr-body.md
-          fi
-          {
-            echo ""
-            echo "## Codex summary"
-            echo ""
-            printf '%s\n' "${CODEX_SUMMARY}"
-          } >> pr-body.md
-
       - name: Create PR with changes
         id: cpr
         uses: peter-evans/create-pull-request@v6
@@ -582,7 +338,14 @@ jobs:
           branch: verity/codex-dev-cycle-${{ github.run_id }}
           delete-branch: true
           title: ${{ inputs.pr_title != '' && inputs.pr_title || format('Verity Codex dev-cycle (run {0})', github.run_id) }}
-          body-file: pr-body.md  # File created in workspace root by "Prepare PR body" step
+          body: |
+            This PR was created automatically by Verity/Codex.
+
+            - Workflow run: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+            - Issue: ${{ inputs.issue_number }}
+
+            ## Codex summary
+            ${{ steps.run_codex.outputs.final-message }}
           labels: ${{ inputs.pr_labels }}
           draft: ${{ inputs.pr_draft == 'true' }}
 
@@ -604,18 +367,16 @@ jobs:
           PR_NUMBER: ${{ steps.cpr.outputs.pull-request-number }}
           PR_URL: ${{ steps.cpr.outputs.pull-request-url }}
 
-      - name: Enable auto-merge on PR
-        if: ${{ inputs.auto_merge == 'true' && steps.cpr.outputs.pull-request-number != '' }}
-        continue-on-error: true
-        env:
-          GH_TOKEN: ${{ steps.gh_write_token.outputs.token || secrets.VERITY_GITHUB_WRITE_TOKEN || github.token }}
-          PR_NUMBER: ${{ steps.cpr.outputs.pull-request-number }}
-        run: |
-          # Enable auto-merge so the PR merges automatically once all required checks pass.
-          # Falls back to merge commit if squash is not allowed on this repo.
-          gh pr merge --auto --squash "$PR_NUMBER" 2>/dev/null || \
-          gh pr merge --auto --merge "$PR_NUMBER" 2>/dev/null || \
-          echo "auto-merge not available on this repository (branch protection rules may need to allow it)"
+      - name: Upload artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: verity-codex-dev-cycle
+          path: |
+            codex-prompt.md
+            codex-output.md
+            issue_context.md
+          if-no-files-found: ignore
 
       - name: Notify Verity - completed
         if: always()
@@ -651,7 +412,7 @@ jobs:
           }
           print(json.dumps(payload))
           PY
-          curl -sS -X POST "$VERITY_CALLBACK_URL" \
+            curl -sS -X POST "$VERITY_CALLBACK_URL" \
             -H "Authorization: Bearer $VERITY_PROJECT_TOKEN" \
             -H "Content-Type: application/json" \
             --data-binary @/tmp/verity-callback.json || true

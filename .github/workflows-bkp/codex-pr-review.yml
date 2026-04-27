@@ -106,14 +106,13 @@ jobs:
           REQUIRED_LABEL: ${{ steps.cfg.outputs.pr_review_label }}
 
       - name: Notify Verity - started
-        continue-on-error: true
         env:
           VERITY_PROJECT_TOKEN: ${{ secrets.VERITY_PROJECT_TOKEN }}
           VERITY_PROJECT_ID: ${{ steps.cfg.outputs.project_id }}
           VERITY_CALLBACK_URL: ${{ steps.cfg.outputs.callback_url }}
           PR_NUMBER: ${{ steps.pr.outputs.number }}
         run: |
-          if [ -z "$VERITY_CALLBACK_URL" ] || [ "$VERITY_CALLBACK_URL" = "__VERITY_CALLBACK_URL__" ]; then
+          if [ -z "$VERITY_CALLBACK_URL" ] || [ "$VERITY_CALLBACK_URL" = "http://localhost:3001/api/callbacks/github-actions" ]; then
             echo "Skipping callback: callback URL not configured"
             exit 0
           fi
@@ -144,6 +143,8 @@ jobs:
           output-file: codex-review.md
           safety-strategy: drop-sudo
           sandbox: read-only
+          allow-bots: true
+          allow-bot-users: bluesky-atg-verity[bot]
 
       - name: Parse review decision
         id: review_parse
@@ -210,7 +211,6 @@ jobs:
 
       - name: Notify Verity
         if: always()
-        continue-on-error: true
         env:
           VERITY_PROJECT_TOKEN: ${{ secrets.VERITY_PROJECT_TOKEN }}
           VERITY_PROJECT_ID: ${{ steps.cfg.outputs.project_id }}
@@ -226,7 +226,7 @@ jobs:
           PR_BASE_REF: ${{ github.event.pull_request.base.ref }}
           CODEX_FINAL_MESSAGE: ${{ steps.run_codex.outputs.final-message }}
         run: |
-          if [ -z "$VERITY_CALLBACK_URL" ] || [ "$VERITY_CALLBACK_URL" = "__VERITY_CALLBACK_URL__" ]; then
+          if [ -z "$VERITY_CALLBACK_URL" ] || [ "$VERITY_CALLBACK_URL" = "http://localhost:3001/api/callbacks/github-actions" ]; then
             echo "Skipping callback: callback URL not configured"
             exit 0
           fi
