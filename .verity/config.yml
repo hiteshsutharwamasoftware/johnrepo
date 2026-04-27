@@ -1,6 +1,6 @@
 version: 1
 verity:
-  project_id: "94be892f-5c44-4580-8bc5-3c1077e1b622"
+  project_id: "6e14c523-3ff5-4c9e-8e92-67886d0fbd62"
   callback_url: "https://69b5-2409-40d4-1069-ba9f-4c2d-f04a-3d4f-4457.ngrok-free.app/api/callbacks/github-actions"
   bootstrap_version: "v1"
 
@@ -12,7 +12,7 @@ commands:
 
 policies:
   pr_review:
-    enabled: false
+    enabled: true
     label_required: "verity:agent"
   openai_guardrail:
     enabled: true
