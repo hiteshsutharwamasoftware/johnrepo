@@ -7,16 +7,15 @@ on:
 permissions:
   contents: read
   actions: write
-  issues: read
 
 jobs:
   route:
-    if: contains(github.event.comment.body, '/codex')
+    if: ${{ !github.event.issue.pull_request && contains(github.event.comment.body, '/codex') && vars.VERITY_ENABLE_COMMAND_ROUTER == 'true' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
         with:
-          fetch-depth: 1
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -29,57 +28,51 @@ jobs:
       - name: Load .verity/config.yml
         id: cfg
         run: |
-          python - <<'PY' > /tmp/verity-callback.json
+          python - <<'PY'
           import os
           from pathlib import Path
           import yaml
-          cfg = yaml.safe_load(Path(".verity/config.yml").read_text()) or {}
-          verity = cfg.get("verity", {}) or {}
-          out = os.environ["GITHUB_OUTPUT"]
-          with open(out, "a", encoding="utf-8") as f:
-            f.write(f"project_id={str(verity.get('project_id','')).strip()}\n")
-            f.write(f"callback_url={str(verity.get('callback_url','')).strip()}\n")
+
+          cfg = yaml.safe_load(Path('.verity/config.yml').read_text()) or {}
+          verity = cfg.get('verity', {}) or {}
+          out = os.environ['GITHUB_OUTPUT']
+          with open(out, 'a', encoding='utf-8') as f:
+            f.write(f"project_id={str(verity.get('project_id', '')).strip()}\n")
+            f.write(f"callback_url={str(verity.get('callback_url', '')).strip()}\n")
           PY
 
-      - name: Parse /codex request
-        id: parse
+      - name: Dispatch codex-dev-cycle
+        uses: actions/github-script@v7
         env:
           COMMENT_BODY: ${{ github.event.comment.body }}
-        run: |
-          python - <<'PY' > /tmp/verity-callback.json
-          import os
-          body = os.environ.get("COMMENT_BODY", "")
-          lower = body.lower()
-          idx = lower.find("/codex")
-          request = ""
-          if idx >= 0:
-            request = body[idx + len("/codex"):].strip()
-          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as f:
-            f.write("request<<EOF\n")
-            f.write(request + "\n")
-            f.write("EOF\n")
-          PY
-
-      - name: Dispatch codex-dev-cycle workflow
-        uses: actions/github-script@v7
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          CALLBACK_URL: ${{ steps.cfg.outputs.callback_url }}
+          VERITY_PROJECT_ID: ${{ steps.cfg.outputs.project_id }}
         with:
           github-token: ${{ github.token }}
           script: |
-            const issueNumber = context.payload.issue?.number;
-            const defaultBranch = context.payload.repository?.default_branch || context.ref.replace('refs/heads/', '');
+            const body = process.env.COMMENT_BODY || '';
+            const cleaned = body.replace(/\/codex\b/i, '').trim();
+            const issueNumber = Number(process.env.ISSUE_NUMBER || '0');
+            const callbackUrl = process.env.CALLBACK_URL || '';
+            const projectId = process.env.VERITY_PROJECT_ID || '';
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const ref = context.payload.repository.default_branch || 'main';
+
+            const inputs = {
+              issue_number: issueNumber ? String(issueNumber) : '',
+              user_request: cleaned,
+              callback_url: callbackUrl,
+              verity_project_id: projectId,
+            };
+
             await github.rest.actions.createWorkflowDispatch({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
+              owner,
+              repo,
               workflow_id: 'codex-dev-cycle.yml',
-              ref: defaultBranch,
-              inputs: {
-                issue_number: issueNumber ? String(issueNumber) : '',
-                user_request: process.env.USER_REQUEST || '',
-                callback_url: process.env.CALLBACK_URL || '',
-                verity_project_id: process.env.PROJECT_ID || ''
-              }
+              ref,
+              inputs,
             });
-        env:
-          USER_REQUEST: ${{ steps.parse.outputs.request }}
-          CALLBACK_URL: ${{ steps.cfg.outputs.callback_url }}
-          PROJECT_ID: ${{ steps.cfg.outputs.project_id }}
+
+            core.info(`Dispatched codex-dev-cycle.yml for issue #${issueNumber}`);
